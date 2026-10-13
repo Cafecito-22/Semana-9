@@ -4,7 +4,7 @@ El proyecto conserva Semana 9 y el laboratorio del profesor. Se retiraron la bar
 
 ## GitHub y Vercel
 
-1. Descomprime el ZIP. Sube el contenido de sunat_semana9 a Cafecito-22/Semana-9, en la raíz del repositorio. Incluye api, server, package.json, build.mjs y vercel.json. La conexión remota no pudo comprobarse desde este entorno; no se realizó una publicación.
+1. Descomprime el ZIP. Sube el contenido de sunat_semana9 a Cafecito-22/Semana-9, en la raíz del repositorio. Incluye api, server, package.json, build.mjs y vercel.json. El proyecto se publicó en Cafecito-22/Semana-9, rama main.
 2. Importa ese repositorio en Vercel. Usa Framework Preset Other. vercel.json establece el comando de construcción y la carpeta public; conserva la instalación de dependencias de package.json.
 3. En Settings > Environment Variables crea DATABASE_URL con la conexión de Neon y SESSION_SECRET con un valor aleatorio de al menos 32 caracteres. Actívalas para Production y para Preview/Development si los usas. No añadas prefijos públicos ni guardes valores reales en el repositorio.
 4. Si la base ya está configurada, no repitas la carga SQL. Para una base de pruebas nueva revisa primero sql/semana9.sql y ejecuta después sql/verificacion_semana9.sql. No ejecutes semana7.sql después de semana9.sql.
@@ -17,3 +17,4 @@ Comprueba en Vercel el inicio de sesión de cada rol, registro, consulta, actual
 La aplicación sigue siendo una simulación académica: mantiene contraseñas y tarjetas de prueba del laboratorio y reglas simuladas. Usa exclusivamente una base de demostración. No la emplees para tarjetas reales ni datos financieros reales. La conexión encontrada en el original fue eliminada del paquete. Si esa conexión ya se publicó anteriormente, cambia la contraseña del rol de Neon y actualiza DATABASE_URL.
 
 Fuentes de configuración: https://vercel.com/docs/environment-variables/managing-environment-variables y https://neon.com/docs/serverless/serverless-driver
+
