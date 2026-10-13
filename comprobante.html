@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Comprobante de pago | SUNAT Perú</title>
+  <link rel="stylesheet" href="css/comprobante.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="index.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a id="volver-zona" href="index.html">Volver a mi zona</a></nav><div class="sesion-chip compacto"><span>Sesión</span><strong id="nombre-sesion">Usuario</strong><button id="boton-cerrar-sesion" type="button">Cerrar sesión</button></div></div></header>
+  <main class="seccion seccion-suave"><div class="contenedor comprobante-wrap"><section><span class="kicker oscuro">CONSTANCIA DE PAGO</span><h1>Operación registrada.</h1><p class="intro">Esta constancia corresponde a la simulación académica de pago del talonario de guías físicas.</p><div id="comprobante" class="comprobante" aria-live="polite">Cargando comprobante...</div><div class="acciones"><button type="button" id="imprimir" class="boton boton-primario">Imprimir</button><a id="volver-zona-secundario" class="boton boton-claro" href="consulta.html">Volver</a></div></section><aside class="sello"><div class="sello-icono">✓</div><strong>Pago registrado</strong><span>La entrega del talonario queda habilitada según el flujo académico.</span></aside></div></main>
+  <script type="module" src="js/comprobante/comprobante.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>

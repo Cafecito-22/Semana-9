@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Acceso | SUNAT Perú</title>
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="index.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a href="index.html">Inicio</a><a href="clave-sol.html">Clave SOL</a><a href="cronograma.html">Cronograma</a><a href="contacto.html">Contacto</a></nav><a class="boton boton-primario" href="login.html">Mi cuenta</a></div></header>
+  <main class="acceso">
+    <section class="acceso-imagen"><div><span class="kicker">ACCESO PERSONAL</span><h1>Tu cuenta, tus trámites.</h1><p>El sistema reconoce cliente, administrador, empleado y cajero. Cada rol entra directamente a su zona.</p></div></section>
+    <section class="acceso-zona">
+      <div class="acceso-card">
+        <div id="zona-auth">
+          <div class="tabs"><button class="tab activo" type="button" data-panel="login">Iniciar sesión</button><button class="tab" type="button" data-panel="registro">Crear cuenta</button></div>
+          <div id="panel-login" class="panel-auth activo"><span class="kicker oscuro">MI CUENTA</span><h2>Bienvenido</h2><p>Ingresa con el correo y contraseña registrados en el sistema.</p><form id="form-login" class="formulario"><label>Correo electrónico</label><input name="correo" type="email" required placeholder="correo@ejemplo.com"><label>Contraseña</label><input name="contrasena" type="password" minlength="4" required placeholder="Tu contraseña"><button class="boton boton-primario ancho" type="submit">Ingresar</button><p id="mensaje-login" class="mensaje" aria-live="polite"></p></form></div>
+          <div id="panel-registro" class="panel-auth"><span class="kicker oscuro">NUEVA CUENTA</span><h2>Crear acceso</h2><p>Las nuevas cuentas se registran automáticamente como cliente/contribuyente.</p><form id="form-registro" class="formulario"><label>Nombre completo</label><input name="nombre" type="text" maxlength="120" required><label>DNI</label><input name="dni" type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required placeholder="8 dígitos"><label>Correo electrónico</label><input name="correo" type="email" maxlength="120" required><label>Contraseña</label><input name="contrasena" type="password" minlength="4" maxlength="255" required><button class="boton boton-primario ancho" type="submit">Crear cuenta y entrar</button><p id="mensaje-registro" class="mensaje" aria-live="polite"></p></form></div>
+        </div>
+        <div id="sesion-activa" class="sesion-activa oculto"><span class="kicker oscuro">SESIÓN ACTIVA</span><h2>Ya estás dentro.</h2><p>No necesitas iniciar sesión otra vez.</p><div class="rol-grande" id="sesion-rol"></div><div class="detalle"><span>Usuario</span><strong id="sesion-nombre"></strong></div><div class="detalle" style="margin-top:10px"><span>Correo</span><strong id="sesion-correo"></strong></div><div style="display:grid;gap:10px;margin-top:20px"><button id="continuar-sesion" class="boton boton-primario" type="button">Continuar a mi zona</button><button id="cerrar-sesion-login" class="boton boton-claro" type="button">Cerrar sesión</button></div></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="js/auth/login.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>

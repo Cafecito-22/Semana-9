@@ -1,0 +1,12 @@
+{
+  "enlaces_locales": 159,
+  "disenos_probados": [
+    1440,
+    390
+  ],
+  "animaciones_y_movimiento_reducido": "aprobado",
+  "pruebas_servidor_base_simulada": 11,
+  "cadenas_conexion_en_paquete": 0,
+  "Neon_real": "pendiente de configurar y probar en Vercel",
+  "GitHub": "sin publicacion por falta de conexion"
+}

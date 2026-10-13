@@ -1,0 +1,275 @@
+{
+  "q1": {
+    "query": "\n    SELECT id,codigo_seguimiento,nombre_contribuyente,ruc,correo,regimen,estado,estado_pago,monto_calculado\n    FROM solicitudes_clave_sol\n    WHERE id=$1 AND id_usuario=$2\n    LIMIT 1;\n  ",
+    "count": 2,
+    "source": "js/actualizar/actualizar.js",
+    "expressions": [
+      "id",
+      "usuario.id"
+    ]
+  },
+  "q2": {
+    "query": "\n    UPDATE solicitudes_clave_sol\n    SET nombre_contribuyente=$1,ruc=$2,correo=$3,regimen=$4,monto_calculado=$5,estado_pago='pendiente',canal_pago=NULL,fecha_pago=NULL\n    WHERE id=$6 AND id_usuario=$7 AND estado='registrado' AND estado_pago<>'pagado'\n    RETURNING id;\n  ",
+    "count": 7,
+    "source": "js/actualizar/actualizar.js",
+    "expressions": [
+      "nombre",
+      "ruc",
+      "correo",
+      "regimen",
+      "monto",
+      "id",
+      "usuario.id"
+    ]
+  },
+  "q3": {
+    "query": "\n    INSERT INTO usuarios (nombre,correo,contrasena,rol,dni)\n    VALUES ($1,$2,$3,'cliente',$4)\n    RETURNING id,nombre,correo,rol,dni;\n  ",
+    "count": 4,
+    "source": "js/auth/auth.js",
+    "expressions": [
+      "nombre",
+      "correo",
+      "contrasena",
+      "dni"
+    ]
+  },
+  "q4": {
+    "query": "\n    SELECT id,nombre,correo,COALESCE(rol,'cliente') AS rol,dni\n    FROM usuarios\n    WHERE LOWER(correo)=LOWER($1) AND contrasena=$2\n    LIMIT 1;\n  ",
+    "count": 2,
+    "source": "js/auth/auth.js",
+    "expressions": [
+      "correo",
+      "contrasena"
+    ]
+  },
+  "q5": {
+    "query": "\n    SELECT r.id,r.id_usuario,r.codigo_seguimiento,r.regimen,r.monto_calculado,r.fecha_registro,\n           COALESCE(u.nombre,r.nombre_contribuyente) AS cliente,u.dni\n    FROM solicitudes_clave_sol r\n    LEFT JOIN usuarios u ON u.id=r.id_usuario\n    WHERE r.estado_pago='pendiente'\n      AND (r.codigo_seguimiento ILIKE $1 OR COALESCE(u.dni,'') ILIKE $2 OR COALESCE(u.nombre,r.nombre_contribuyente,'') ILIKE $3)\n    ORDER BY r.fecha_registro ASC NULLS LAST,r.id ASC\n    LIMIT 50;\n  ",
+    "count": 3,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "patron",
+      "patron",
+      "patron"
+    ]
+  },
+  "q6": {
+    "query": "INSERT INTO pagos (codigo_operacion,id_registro,id_usuario,canal,metodo,proveedor_billetera,referencia,monto,monto_recibido,vuelto,estado,id_cajero) VALUES ($1,$2,$3,'caja',$4,$5,$6,$7,$8,$9,'aprobado',$10);",
+    "count": 10,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "codigo",
+      "registro.id",
+      "registro.id_usuario",
+      "metodo",
+      "proveedor",
+      "referencia",
+      "monto",
+      "montoRecibido",
+      "vuelto",
+      "usuario.id"
+    ]
+  },
+  "q7": {
+    "query": "UPDATE solicitudes_clave_sol SET estado_pago='pagado',canal_pago='caja',fecha_pago=NOW() WHERE id=$1 AND estado_pago='pendiente';",
+    "count": 1,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "registro.id"
+    ]
+  },
+  "q8": {
+    "query": "\n    SELECT p.id,p.codigo_operacion,p.metodo,p.proveedor_billetera,p.marca_tarjeta,p.referencia,p.monto,p.estado,p.motivo_rechazo,p.verificado,p.fecha_pago,\n           r.codigo_seguimiento,u.nombre AS cliente,v.nombre AS verificador\n    FROM pagos p\n    JOIN solicitudes_clave_sol r ON r.id=p.id_registro\n    LEFT JOIN usuarios u ON u.id=p.id_usuario\n    LEFT JOIN usuarios v ON v.id=p.verificado_por\n    WHERE p.canal='pasarela'\n      AND (p.fecha_pago AT TIME ZONE 'America/Lima')::date=$1::date\n      AND ($2=false OR (p.estado='aprobado' AND p.verificado=false))\n    ORDER BY p.fecha_pago DESC;\n  ",
+    "count": 2,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "fecha",
+      "soloPorVerificar"
+    ]
+  },
+  "q9": {
+    "query": "UPDATE pagos SET verificado=true,verificado_por=$1,fecha_verificacion=NOW() WHERE id=$2 AND canal='pasarela' AND estado='aprobado';",
+    "count": 2,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "usuario.id",
+      "idPago"
+    ]
+  },
+  "q10": {
+    "query": "SELECT canal,metodo,COUNT(*)::int AS operaciones,SUM(monto) AS total FROM pagos WHERE estado='aprobado' AND (fecha_pago AT TIME ZONE 'America/Lima')::date=$1::date GROUP BY canal,metodo ORDER BY canal,metodo;",
+    "count": 1,
+    "source": "js/caja/caja.js",
+    "expressions": [
+      "fecha"
+    ]
+  },
+  "q11": {
+    "query": "\n    SELECT p.codigo_operacion,p.canal,p.metodo,p.proveedor_billetera,p.marca_tarjeta,p.referencia,p.monto,p.monto_recibido,p.vuelto,p.fecha_pago,p.id_usuario,\n           r.codigo_seguimiento,r.regimen,u.nombre AS cliente,c.nombre AS cajero\n    FROM pagos p\n    JOIN solicitudes_clave_sol r ON r.id=p.id_registro\n    LEFT JOIN usuarios u ON u.id=p.id_usuario\n    LEFT JOIN usuarios c ON c.id=p.id_cajero\n    WHERE p.codigo_operacion=$1 AND p.estado='aprobado'\n    LIMIT 1;\n  ",
+    "count": 1,
+    "source": "js/comprobante/comprobante.js",
+    "expressions": [
+      "op"
+    ]
+  },
+  "q12": {
+    "query": "\n      SELECT r.id,r.codigo_seguimiento,r.nombre_contribuyente,r.ruc,r.regimen,r.estado,r.estado_pago,r.canal_pago,r.monto_calculado,r.fecha_registro,p.codigo_operacion\n      FROM solicitudes_clave_sol r\n      LEFT JOIN pagos p ON p.id_registro=r.id AND p.estado='aprobado'\n      WHERE r.id_usuario=$1\n      ORDER BY r.fecha_registro DESC NULLS LAST,r.id DESC;\n    ",
+    "count": 1,
+    "source": "js/consulta/consulta.js",
+    "expressions": [
+      "usuario.id"
+    ]
+  },
+  "q13": {
+    "query": "\n    SELECT id, codigo_seguimiento, regimen, monto_calculado, estado_pago\n    FROM solicitudes_clave_sol\n    WHERE id=$1 AND id_usuario=$2\n    LIMIT 1;\n  ",
+    "count": 2,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "idRegistro",
+      "idUsuario"
+    ]
+  },
+  "q14": {
+    "query": "\n    SELECT id, codigo_seguimiento, regimen, monto_calculado\n    FROM solicitudes_clave_sol\n    WHERE id_usuario=$1 AND estado_pago='pendiente'\n    ORDER BY fecha_registro DESC NULLS LAST, id DESC;\n  ",
+    "count": 1,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "idUsuario"
+    ]
+  },
+  "q15": {
+    "query": "\n    INSERT INTO pagos\n      (codigo_operacion,id_registro,id_usuario,canal,metodo,proveedor_billetera,marca_tarjeta,referencia,monto,estado,motivo_rechazo)\n    VALUES\n      ($1,$2,$3,'pasarela',$4,$5,$6,$7,$8,'rechazado',$9);\n  ",
+    "count": 9,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "codigo",
+      "registro.id",
+      "usuario.id",
+      "metodo",
+      "proveedor",
+      "marca",
+      "referencia",
+      "registro.monto_calculado",
+      "motivo"
+    ]
+  },
+  "q16": {
+    "query": "\n      INSERT INTO pagos\n        (codigo_operacion,id_registro,id_usuario,canal,metodo,proveedor_billetera,marca_tarjeta,referencia,monto,estado)\n      VALUES\n        ($1,$2,$3,'pasarela',$4,$5,$6,$7,$8,'aprobado');\n    ",
+    "count": 8,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "codigo",
+      "registro.id",
+      "usuario.id",
+      "metodo",
+      "proveedor",
+      "marca",
+      "referencia",
+      "monto"
+    ]
+  },
+  "q17": {
+    "query": "\n      UPDATE solicitudes_clave_sol\n      SET estado_pago='pagado',canal_pago='pasarela',fecha_pago=NOW()\n      WHERE id=$1 AND estado_pago='pendiente';\n    ",
+    "count": 1,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "registro.id"
+    ]
+  },
+  "q18": {
+    "query": "\n    SELECT t.tipo,t.mes_venc,t.anio_venc,t.cvv,t.estado,c.id AS id_cuenta,c.saldo_disponible\n    FROM banco_tarjetas t\n    JOIN banco_cuentas c ON c.id=t.id_cuenta\n    WHERE t.numero=$1;\n  ",
+    "count": 1,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "pan"
+    ]
+  },
+  "q19": {
+    "query": "UPDATE banco_cuentas SET saldo_disponible=saldo_disponible-$1 WHERE id=$2;",
+    "count": 2,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "monto",
+      "tarjeta.id_cuenta"
+    ]
+  },
+  "q20": {
+    "query": "\n    SELECT id,saldo_disponible,codigo_aprobacion\n    FROM billeteras\n    WHERE proveedor=$1 AND celular=$2;\n  ",
+    "count": 2,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "proveedor",
+      "cel"
+    ]
+  },
+  "q21": {
+    "query": "UPDATE billeteras SET saldo_disponible=saldo_disponible-$1 WHERE id=$2;",
+    "count": 2,
+    "source": "js/pago/pasarela.js",
+    "expressions": [
+      "monto",
+      "billetera.id"
+    ]
+  },
+  "q22": {
+    "query": "SELECT id,nombre,correo,turno FROM usuarios WHERE rol='empleado' ORDER BY nombre ASC;",
+    "count": 0,
+    "source": "js/panel/panel.js",
+    "expressions": []
+  },
+  "q23": {
+    "query": "\n      SELECT id,id_usuario,codigo_seguimiento,nombre_contribuyente,ruc,correo,regimen,estado,estado_pago,canal_pago,monto_calculado,fecha_registro\n      FROM solicitudes_clave_sol\n      ORDER BY fecha_registro DESC NULLS LAST,id DESC;\n    ",
+    "count": 0,
+    "source": "js/panel/panel.js",
+    "expressions": []
+  },
+  "q24": {
+    "query": "DELETE FROM solicitudes_clave_sol WHERE id=$1;",
+    "count": 1,
+    "source": "js/panel/panel.js",
+    "expressions": [
+      "id"
+    ]
+  },
+  "q25": {
+    "query": "\n      UPDATE solicitudes_clave_sol\n      SET nombre_contribuyente=$1,ruc=$2,correo=$3,estado=$4,\n          regimen=CASE WHEN estado_pago='pagado' THEN solicitudes_clave_sol.regimen ELSE $5 END,\n          monto_calculado=CASE WHEN estado_pago='pagado' THEN solicitudes_clave_sol.monto_calculado ELSE $6 END\n      WHERE id=$7;\n    ",
+    "count": 7,
+    "source": "js/panel/panel.js",
+    "expressions": [
+      "nombre",
+      "ruc",
+      "correo",
+      "estado",
+      "regimen",
+      "monto",
+      "id"
+    ]
+  },
+  "q26": {
+    "query": "\n      INSERT INTO solicitudes_clave_sol\n        (id_usuario,codigo_seguimiento,nombre_contribuyente,ruc,correo,regimen,monto_calculado,estado_pago,estado)\n      VALUES\n        (NULL,$1,$2,$3,$4,$5,$6,'pendiente',$7);\n    ",
+    "count": 7,
+    "source": "js/panel/panel.js",
+    "expressions": [
+      "codigo",
+      "nombre",
+      "ruc",
+      "correo",
+      "regimen",
+      "monto",
+      "estado"
+    ]
+  },
+  "q27": {
+    "query": "\n    INSERT INTO solicitudes_clave_sol\n      (id_usuario,codigo_seguimiento,nombre_contribuyente,ruc,correo,regimen,monto_calculado,estado_pago,estado)\n    VALUES\n      ($1,$2,$3,$4,$5,$6,$7,'pendiente','registrado')\n    RETURNING id,codigo_seguimiento,monto_calculado;\n  ",
+    "count": 7,
+    "source": "js/registro/registro.js",
+    "expressions": [
+      "usuario.id",
+      "codigo",
+      "datos.nombre",
+      "datos.ruc",
+      "datos.correo",
+      "datos.regimen",
+      "monto"
+    ]
+  }
+}

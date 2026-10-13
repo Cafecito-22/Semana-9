@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mi cuenta | SUNAT Perú</title>
+  <link rel="stylesheet" href="css/cuenta.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="cuenta.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a href="cuenta.html">Mi cuenta</a><a href="registro.html">Nueva solicitud</a><a href="consulta.html">Mis solicitudes</a><a href="pago.html">Pagar</a></nav><a class="boton boton-claro" href="consulta.html">Ver trámites</a></div></header>
+  <main>
+    <section class="cabecera-pagina cuenta-hero"><div class="contenedor cabecera-pagina-grid"><div><span class="kicker">CONTRIBUYENTE</span><h1>Tu zona personal.</h1><p>Registra tu solicitud, cotiza el talonario, paga en línea y consulta tu comprobante.</p></div><div class="sesion-chip"><span>Sesión activa</span><strong id="nombre-sesion">Cliente</strong><button id="boton-cerrar-sesion" type="button">Cerrar sesión</button></div></div></section>
+    <section class="seccion seccion-suave"><div class="contenedor cuenta-grid"><div class="bienvenida"><span class="kicker oscuro">BIENVENIDO</span><h2>Hola, <span id="bienvenida-nombre">contribuyente</span>.</h2><p>Tu sesión ya está iniciada. El costo del talonario depende de tu régimen: NRUS S/ 10.00; MYPE o Régimen General S/ 25.00.</p><div class="detalle" style="margin-top:18px"><span>Correo de la cuenta</span><strong id="correo-cuenta"></strong></div><div class="acciones-cuenta"><a class="accion-card" href="registro.html"><span>＋</span><h3>Nueva solicitud</h3><p>Registrar y cotizar una Solicitud de Clave SOL.</p></a><a class="accion-card" href="consulta.html"><span>⌕</span><h3>Mis solicitudes</h3><p>Consultar, editar, pagar y ver comprobantes.</p></a><a class="accion-card" href="pago.html"><span>S/</span><h3>Pago en línea</h3><p>Pagar con tarjeta o billetera electrónica.</p></a></div></div><div class="cuenta-imagen"><img src="img/cuenta-digital.jpg" alt="Servicios digitales SUNAT"></div></div></section>
+  </main>
+  <footer class="pie"><div class="contenedor pie-grid"><div><strong>SUNAT Perú</strong><div style="margin-top:6px;font-size:12px">Proyecto académico de servicios tributarios</div></div><div><a href="clave-sol.html">Clave SOL</a><a href="login.html">Acceso</a></div></div></footer>
+  <script type="module" src="js/cuenta/cuenta.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>

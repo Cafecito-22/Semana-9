@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mis solicitudes | SUNAT</title>
+  <link rel="stylesheet" href="css/consulta.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="cuenta.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a href="cuenta.html">Mi cuenta</a><a href="registro.html">Nueva solicitud</a><a class="activo" href="consulta.html">Mis solicitudes</a><a href="pago.html">Pagar</a></nav><a class="boton boton-claro" href="pago.html">Pago en línea</a></div></header>
+  <main>
+    <section class="cabecera-pagina"><div class="contenedor cabecera-pagina-grid"><div><span class="kicker">CLIENTE</span><h1>Mis solicitudes.</h1><p>Solo se muestran tus registros. Desde aquí puedes editar si aún no está pagado, pagar o abrir el comprobante.</p></div><div class="sesion-chip"><span>Sesión activa</span><strong id="nombre-sesion">Cliente</strong><button id="boton-cerrar-sesion" type="button">Cerrar sesión</button></div></div></section>
+    <section class="seccion seccion-suave"><div class="contenedor"><div class="resumen-consulta"><div class="stat"><span>Total</span><strong id="total-solicitudes">0</strong></div><div class="stat"><span>Pendientes de pago</span><strong id="total-pendientes">0</strong></div><div class="stat"><span>Pagadas</span><strong id="total-pagadas">0</strong></div></div><div class="tabla-wrap"><table><thead><tr><th>Código</th><th>Contribuyente</th><th>RUC</th><th>Régimen</th><th>Estado</th><th>Pago</th><th>Monto</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody id="tabla-solicitudes"><tr><td colspan="9" class="vacio">Cargando...</td></tr></tbody></table></div></div></section>
+  </main>
+  <footer class="pie"><div class="contenedor pie-grid"><div><strong>SUNAT Perú</strong><div style="margin-top:6px;font-size:12px">Proyecto académico de servicios tributarios</div></div><div><a href="clave-sol.html">Clave SOL</a><a href="login.html">Acceso</a></div></div></footer>
+  <script type="module" src="js/consulta/consulta.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>

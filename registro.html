@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nueva Solicitud Clave SOL | SUNAT</title>
+  <link rel="stylesheet" href="css/registro.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="cuenta.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a href="cuenta.html">Mi cuenta</a><a class="activo" href="registro.html">Nueva solicitud</a><a href="consulta.html">Mis solicitudes</a><a href="pago.html">Pagar</a></nav><a class="boton boton-claro" href="consulta.html">Ver trámites</a></div></header>
+  <main>
+    <section class="cabecera-pagina"><div class="contenedor cabecera-pagina-grid"><div><span class="kicker">SEMANA 9 · CLIENTE</span><h1>Solicitud y tarifario.</h1><p>Selecciona tu régimen tributario y el monto del talonario se calcula automáticamente antes de guardar.</p></div><div class="sesion-chip"><span>Sesión activa</span><strong id="nombre-sesion">Cliente</strong><button id="boton-cerrar-sesion" type="button">Cerrar sesión</button></div></div></section>
+    <section class="seccion seccion-suave"><div class="contenedor registro-layout"><aside class="guia"><span class="kicker">TALONARIO DE GUÍAS</span><h2>Tarifa SUNAT</h2><p>NRUS paga S/ 10.00. MYPE Tributario y Régimen General pagan S/ 25.00. El pago habilita la entrega del talonario físico.</p><div class="tarifa-mini"><span id="detalle-tarifa">NRUS: S/ 10.00</span><strong id="monto-estimado">S/ 10.00</strong></div><img src="img/seguridad-digital.jpg" alt="Seguridad digital"></aside><section class="panel-blanco"><span class="kicker oscuro">SOLICITUD CLAVE SOL</span><h2>Datos del contribuyente</h2><form id="form-solicitud" class="formulario"><label>Nombre del contribuyente</label><input name="nombre" type="text" maxlength="120" required><div class="dos-columnas"><div><label>RUC</label><input name="ruc" type="text" inputmode="numeric" pattern="[0-9]{11}" maxlength="11" required placeholder="11 dígitos"></div><div><label>Correo</label><input id="correo" name="correo" type="email" maxlength="120" required></div></div><label>Régimen tributario</label><select id="regimen" name="regimen" required><option value="nrus">NRUS — S/ 10.00</option><option value="mype">MYPE Tributario — S/ 25.00</option><option value="general">Régimen General — S/ 25.00</option></select><div class="cotizador"><span>Monto estimado</span><strong id="monto-estimado-visual">Se muestra en la tarjeta lateral</strong><small>Se vuelve a calcular al guardar para no confiar solo en la pantalla.</small></div><button id="guardar-solicitud" class="boton boton-primario" type="submit">Registrar solicitud</button><p id="mensaje-solicitud" class="mensaje" aria-live="polite"></p></form><div id="confirmacion" class="confirmacion oculto"><span>Solicitud registrada</span><p>Código: <strong id="codigo-generado"></strong></p><p>Monto pendiente: <strong id="monto-generado"></strong></p><div class="acciones-tabla"><a id="pagar-ahora" class="boton boton-primario" href="pago.html">Pagar ahora</a><a class="boton boton-claro" href="consulta.html">Ver mis solicitudes</a></div></div></section></div></section>
+  </main>
+  <footer class="pie"><div class="contenedor pie-grid"><div><strong>SUNAT Perú</strong><div style="margin-top:6px;font-size:12px">Proyecto académico de servicios tributarios</div></div><div><a href="clave-sol.html">Clave SOL</a><a href="login.html">Acceso</a></div></div></footer>
+  <script type="module" src="js/registro/registro.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>

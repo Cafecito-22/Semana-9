@@ -1,0 +1,15 @@
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS rol VARCHAR(20) NOT NULL DEFAULT 'cliente';
+ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS turno VARCHAR(10);
+ALTER TABLE solicitudes_clave_sol ADD COLUMN IF NOT EXISTS id_usuario INT REFERENCES usuarios(id);
+ALTER TABLE solicitudes_clave_sol ADD COLUMN IF NOT EXISTS estado VARCHAR(20) NOT NULL DEFAULT 'registrado';
+ALTER TABLE solicitudes_clave_sol ADD COLUMN IF NOT EXISTS fecha_registro TIMESTAMPTZ NOT NULL DEFAULT NOW();
+UPDATE usuarios SET rol = 'cliente' WHERE rol IS NULL OR rol = '';
+UPDATE usuarios SET rol = 'administrador' WHERE LOWER(correo) = LOWER('72922081@continental.edu.pe');
+UPDATE usuarios SET rol = 'empleado' WHERE LOWER(correo) = LOWER('johaogavilan@gmail.com');
+UPDATE usuarios SET turno = 'manana' WHERE LOWER(COALESCE(turno,'')) IN ('mañana','manana');
+UPDATE usuarios SET turno = 'tarde' WHERE LOWER(COALESCE(turno,'')) = 'tarde';
+UPDATE usuarios SET turno = 'noche' WHERE LOWER(COALESCE(turno,'')) = 'noche';
+UPDATE usuarios SET turno = 'manana' WHERE LOWER(correo) IN ('empleado1@sunat-demo.example','empleado1@sunat-demo.com','johaogavilan@gmail.com') AND (turno IS NULL OR turno = '');
+UPDATE usuarios SET turno = 'tarde' WHERE LOWER(correo) IN ('empleado2@sunat-demo.example','empleado2@sunat-demo.com') AND (turno IS NULL OR turno = '');
+UPDATE usuarios SET turno = 'noche' WHERE LOWER(correo) IN ('empleado3@sunat-demo.example','empleado3@sunat-demo.com') AND (turno IS NULL OR turno = '');
+UPDATE solicitudes_clave_sol SET estado = 'registrado' WHERE estado IS NULL OR estado = '';

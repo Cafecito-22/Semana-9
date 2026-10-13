@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Actualizar solicitud | SUNAT</title>
+  <link rel="stylesheet" href="css/actualizar.css">
+</head>
+<body>
+  
+  <header class="cabecera"><div class="contenedor nav"><a class="logo" href="cuenta.html"><span class="logo-simbolo"><span>S</span></span>SUNAT</a><nav class="menu"><a href="cuenta.html">Mi cuenta</a><a href="registro.html">Nueva solicitud</a><a class="activo" href="consulta.html">Mis solicitudes</a><a href="pago.html">Pagar</a></nav><a class="boton boton-claro" href="consulta.html">Volver</a></div></header>
+  <main>
+    <section class="cabecera-pagina"><div class="contenedor cabecera-pagina-grid"><div><span class="kicker">CLIENTE</span><h1>Corregir solicitud.</h1><p>Solo puedes editar si sigue registrada y todavía no fue pagada. Si cambia el régimen, el monto se recalcula.</p></div><div class="sesion-chip"><span>Sesión activa</span><strong id="nombre-sesion">Cliente</strong><button id="boton-cerrar-sesion" type="button">Cerrar sesión</button></div></div></section>
+    <section class="seccion seccion-suave"><div class="contenedor actualizar-wrap"><aside class="nota"><span class="kicker oscuro">REGLA DE EDICIÓN</span><h2>Antes del pago</h2><p>Una solicitud pagada ya no se modifica. Esto evita que el monto del comprobante deje de coincidir con los datos guardados.</p><div class="detalle" style="margin-top:18px"><span>Código</span><strong id="codigo">-</strong></div><div class="detalle" style="margin-top:10px"><span>Estado</span><strong id="estado">-</strong></div><div class="detalle" style="margin-top:10px"><span>Nuevo monto</span><strong id="monto-actualizado">S/ 0.00</strong></div></aside><section class="panel-blanco"><h2>Actualizar datos</h2><form id="form-actualizar" class="formulario"><label>Nombre</label><input id="nombre" name="nombre" type="text" required><label>RUC</label><input id="ruc" name="ruc" type="text" pattern="[0-9]{11}" maxlength="11" required><label>Correo</label><input id="correo" name="correo" type="email" required><label>Régimen tributario</label><select id="regimen" name="regimen" required><option value="nrus">NRUS — S/ 10.00</option><option value="mype">MYPE Tributario — S/ 25.00</option><option value="general">Régimen General — S/ 25.00</option></select><button class="boton boton-primario" type="submit">Guardar cambios</button></form><p id="mensaje-actualizar" class="mensaje" aria-live="polite"></p></section></div></section>
+  </main>
+  <footer class="pie"><div class="contenedor pie-grid"><div><strong>SUNAT Perú</strong><div style="margin-top:6px;font-size:12px">Proyecto académico de servicios tributarios</div></div><div><a href="clave-sol.html">Clave SOL</a><a href="login.html">Acceso</a></div></div></footer>
+  <script type="module" src="js/actualizar/actualizar.js"></script>
+  <script src="js/ui/animated-background.js"></script>
+</body>
+</html>
