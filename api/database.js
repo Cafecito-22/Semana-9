@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { readFileSync } from 'node:fs';
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHmac, timingSafeEqual, scryptSync, randomBytes } from 'node:crypto';
 const registry=JSON.parse(readFileSync(new URL('../server/queries.json',import.meta.url),'utf8'));
 function signature(value){return createHmac('sha256',process.env.SESSION_SECRET).update(value).digest('base64url');}
 function session(req){
@@ -19,6 +19,14 @@ function setSession(res,user){
 }
 function fail(message,status=403){throw Object.assign(new Error(message),{status});}
 function tariff(regimen){if(!['nrus','mype','general'].includes(regimen))fail('Régimen inválido.',400);return regimen==='nrus'?10:25;}
+function passwordMatches(password,stored){
+  try{
+    if(!stored.startsWith('scrypt$'))return stored===password;
+    const [,salt,hash]=stored.split('$');
+    const expected=Buffer.from(hash,'hex');const actual=scryptSync(password,salt,64);
+    return expected.length===actual.length&&timingSafeEqual(expected,actual);
+  }catch{return false;}
+}
 export default async function handler(req,res){
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST')return res.status(405).json({error:'Método no permitido.'});
@@ -33,6 +41,13 @@ export default async function handler(req,res){
     let user=session(req);
     if(user){const rows=await db.query('SELECT id,COALESCE(rol,\'cliente\') AS rol FROM usuarios WHERE id=$1',[user.id]);user=rows[0];}
     const ids=queries.map(q=>q.id);
+    if(ids.length===1&&ids[0]==='q4'){
+      const values=queries[0].values;
+      if(!Array.isArray(values)||values.length!==2||values.some(v=>typeof v!=='string'||v.length>500))fail('Datos inválidos.',400);
+      const rows=await db.query("SELECT id,nombre,correo,COALESCE(rol,'cliente') AS rol,dni,contrasena FROM usuarios WHERE LOWER(correo)=LOWER($1) LIMIT 1",[values[0]]);
+      if(!rows.length||!passwordMatches(values[1],rows[0].contrasena))return res.json([[]]);
+      const {contrasena,...account}=rows[0];setSession(res,account);return res.json([[account]]);
+    }
     const payment=ids.includes('q16')?queries.find(q=>q.id==='q16'):null;
     if(transaction&&!((ids.join(',')==='q6,q7')||(ids.join(',')==='q19,q16,q17')||(ids.join(',')==='q21,q16,q17')))fail('Transacción no permitida.');
     const prepared=[];
@@ -41,6 +56,10 @@ export default async function handler(req,res){
       if(!def||!Array.isArray(item.values)||item.values.length!==def.count||item.values.some(v=>v!==null&&!['number','string','boolean'].includes(typeof v)))fail('Consulta inválida.',400);
       const values=[...item.values];let query=def.query;
       const auth=['q3','q4'].includes(item.id);
+      if(item.id==='q3'){
+        if(values.some(v=>typeof v!=='string')||values[2].length<4||values[2].length>500)fail('Datos de registro inválidos.',400);
+        const salt=randomBytes(16).toString('hex');values[2]='scrypt$'+salt+'$'+scryptSync(values[2],salt,64).toString('hex');
+      }
       if(!auth&&!user)fail('Inicia sesión.',401);
       if(auth&&transaction)fail('Petición inválida.',400);
       if(def.source.includes('/panel/')&&!['administrador','empleado'].includes(user.rol))fail('Acceso denegado.');
