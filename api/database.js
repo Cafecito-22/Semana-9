@@ -17,7 +17,7 @@ function setSession(res,user){
   const data=Buffer.from(JSON.stringify({id:user.id,rol:user.rol,exp:Date.now()+28800000})).toString('base64url');
   res.setHeader('Set-Cookie',`sunat_session=${data}.${signature(data)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${process.env.VERCEL?'; Secure':''}`);
 }
-function fail(message,status=403){throw Object.assign(new Error(message),{status});}
+function fail(message,status=403,code){throw Object.assign(new Error(message),{status,code});}
 function tariff(regimen){if(!['nrus','mype','general'].includes(regimen))fail('Régimen inválido.',400);return regimen==='nrus'?10:25;}
 function passwordMatches(password,stored){
   try{
@@ -75,7 +75,7 @@ export default async function handler(req,res){
         const rows=await db.query('SELECT id,id_usuario,monto_calculado,estado_pago FROM solicitudes_clave_sol WHERE id=$1',[values[index]]);
         const record=rows[0];
         if(!record||Number(record.id_usuario)!==Number(user.id))fail('Solicitud no disponible.');
-        if(item.id!=='q15'&&record.estado_pago!=='pendiente')fail('Esta solicitud ya fue pagada.',409);
+        if(item.id!=='q15'&&record.estado_pago!=='pendiente')fail('Esta solicitud ya fue pagada.',409,'23505');
         if(item.id!=='q17')values[7]=Number(record.monto_calculado);
         if(item.id==='q16'&&!transaction)fail('El pago requiere una transacción.');
         if(item.id==='q17'&&Number(values[0])!==Number(payment?.values[1]))fail('Solicitud inválida.');
